@@ -124,15 +124,16 @@ function drawPathAndCalculateScore() {
       drawingDirection = Math.sign(angleDiff);
     }
 
-    if (
-      drawingDirection !== 0 &&
-      Math.abs(angleDiff) > 0.01 &&
-      Math.sign(angleDiff) === -drawingDirection
-    ) {
-      showMessage("Wrong way", true);
-      messageShown = true;
-    }
-  }
+if (drawingDirection !== 0 && Math.abs(angleDiff) > 0.01 && Math.sign(angleDiff) === -drawingDirection) {
+    showMessage("WRONG WAY! RESTARTING...", true);
+    isDrawing = false; // Stops the drawing immediately
+    setTimeout(() => {
+        points = []; // Clears the circle
+        drawInitialState();
+        hideMessage();
+    }, 800); // 0.8 second pause so they can read why they failed
+    return; // Exit the function so it doesn't draw the "bad" point
+}
 
   // Radius validation
   if (!messageShown) {
@@ -142,11 +143,16 @@ function drawPathAndCalculateScore() {
       Math.pow(lastPoint.y - CENTER.y, 2)
     );
 
-    if (distanceFromCenter < MIN_RADIUS) {
-      showMessage("Try drawing a bigger circle", true);
-      messageShown = true;
-    }
-  }
+if (distanceFromCenter < MIN_RADIUS) {
+    showMessage("TOO SMALL! RESTARTING...", true);
+    isDrawing = false; 
+    setTimeout(() => {
+        points = [];
+        drawInitialState();
+        hideMessage();
+    }, 800);
+    return;
+}
 
   if (!messageShown) hideMessage();
 
