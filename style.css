@@ -1,0 +1,109 @@
+/* Basic reset and full-screen setup */
+body {
+    margin: 0;
+    background-color: #000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Hide scrollbars */
+}
+/* Canvas fills the entire screen, positioned behind the text */
+#drawCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* Style for the large, central percentage text */
+.score {
+    font-size: 8rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.2);
+    z-index: 10;
+    /* Allows mouse events to pass through to the canvas below */
+    pointer-events: none;
+}
+/* Style for the "Best: XX%" text at the bottom */
+.best-score {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 10;
+    pointer-events: none;
+}
+/* Style for the contextual message box */
+.message {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
+/* Blinking animation for warnings */
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+.message.blinking {
+    animation: blink 1.5s infinite;
+}
+/* Style for the "New High Score" notification */
+.new-high-score {
+    position: absolute;
+    bottom: 60px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); /* Pop-in effect */
+}
+.new-high-score.active {
+    opacity: 1;
+    transform: scale(1);
+    animation: glow 1s 2 alternate; /* Play the glow twice */
+}
+/* Glowing animation for the high score text */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #eee;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 20px #eee, 0 0 30px #ddd;
+    }
+}
+/* Style for the Share button */
+.share-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 30;
+    padding: 12px 24px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+.share-button.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
