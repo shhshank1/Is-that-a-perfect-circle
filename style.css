@@ -9,6 +9,9 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden; /* Hide scrollbars */
+
+    /*ADDing this will help work in phone too (android)*/
+    touch-action: none;
 }
 /* Canvas fills the entire screen, positioned behind the text */
 #drawCanvas {

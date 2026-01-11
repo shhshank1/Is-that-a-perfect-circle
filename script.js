@@ -73,6 +73,35 @@ canvas.addEventListener("mouseup", () => {
   }
 });
 
+// --- ADD THESE TOUCH EVENTS HERE FOR MOBILE SUPPORT ---
+
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault(); // Prevents phone from scrolling/refreshing
+  const touch = e.touches[0];
+  const mouseEvent = new MouseEvent("mousedown", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  canvas.dispatchEvent(mouseEvent); // Maps touch to mousedown
+}, { passive: false });
+
+canvas.addEventListener("touchmove", (e) => {
+  e.preventDefault(); 
+  const touch = e.touches[0];
+  const mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  canvas.dispatchEvent(mouseEvent); // Maps move to mousemove
+}, { passive: false });
+
+canvas.addEventListener("touchend", (e) => {
+  const mouseEvent = new MouseEvent("mouseup", {});
+  canvas.dispatchEvent(mouseEvent); // Maps lift-off to mouseup
+});
+
+// --- END OF TOUCH EVENTS ---
+
 function drawPathAndCalculateScore() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawCenterDot();
