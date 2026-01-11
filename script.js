@@ -108,7 +108,7 @@ function drawPathAndCalculateScore() {
 
   let messageShown = false;
 
-  // Direction validation
+  // 1. DIRECTION VALIDATION
   if (points.length > 2) {
     const p1 = points[points.length - 2];
     const p2 = points[points.length - 1];
@@ -124,37 +124,37 @@ function drawPathAndCalculateScore() {
       drawingDirection = Math.sign(angleDiff);
     }
 
-if (drawingDirection !== 0 && Math.abs(angleDiff) > 0.01 && Math.sign(angleDiff) === -drawingDirection) {
-    showMessage("WRONG WAY! RESTARTING...", true);
-    isDrawing = false; // Stops the drawing immediately
-    setTimeout(() => {
-        points = []; // Clears the circle
+    if (drawingDirection !== 0 && Math.abs(angleDiff) > 0.01 && Math.sign(angleDiff) === -drawingDirection) {
+      showMessage("WRONG WAY! RESTARTING...", true);
+      isDrawing = false; 
+      setTimeout(() => {
+        points = []; 
         drawInitialState();
         hideMessage();
-    }, 800); // 0.8 second pause so they can read why they failed
-    return; // Exit the function so it doesn't draw the "bad" point
-}
+      }, 800);
+      return; // Exit here so we don't draw the "bad" point
+    }
+  }
 
-  // Radius validation
-  if (!messageShown) {
-    const lastPoint = points[points.length - 1];
-    const distanceFromCenter = Math.sqrt(
-      Math.pow(lastPoint.x - CENTER.x, 2) +
-      Math.pow(lastPoint.y - CENTER.y, 2)
-    );
+  // 2. RADIUS VALIDATION
+  const lastPoint = points[points.length - 1];
+  const distanceFromCenter = Math.sqrt(
+    Math.pow(lastPoint.x - CENTER.x, 2) + Math.pow(lastPoint.y - CENTER.y, 2)
+  );
 
-if (distanceFromCenter < MIN_RADIUS) {
+  if (distanceFromCenter < MIN_RADIUS) {
     showMessage("TOO SMALL! RESTARTING...", true);
     isDrawing = false; 
     setTimeout(() => {
-        points = [];
-        drawInitialState();
-        hideMessage();
+      points = [];
+      drawInitialState();
+      hideMessage();
     }, 800);
-    return;
-}
+    return; // Exit here so we don't draw the "bad" point
+  }
 
-  if (!messageShown) hideMessage();
+  // 3. IF WE PASS VALIDATION: DRAW AND SCORE
+  hideMessage();
 
   const score = calculateAccuracy(points);
   const color = getScoreColor(score);
