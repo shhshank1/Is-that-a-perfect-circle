@@ -1,112 +1,72 @@
-/* Basic reset and full-screen setup */
-body {
-    margin: 0;
-    background-color: #000;
-    color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Hide scrollbars */
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
-    /*ADDing this will help work in phone too (android)*/
+body {
+    background-color: #000;
+    overflow: hidden;
+    height: 100vh; width: 100vw;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex; justify-content: center; align-items: center;
     touch-action: none;
 }
-/* Canvas fills the entire screen, positioned behind the text */
-#drawCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
+
+#bgCanvas { position: absolute; top: 0; left: 0; z-index: 1; }
+#drawCanvas { position: absolute; top: 0; left: 0; z-index: 5; background: transparent; }
+
+/* 1. Wide Glass Navbar with Premium Blur */
+.glass-nav {
+    position: fixed; top: 20px;
+    width: 95%; max-width: 800px; /* Widened */
+    height: 64px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px) saturate(160%); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
-/* Style for the large, central percentage text */
-.score {
-    font-size: 8rem;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.2);
-    z-index: 10;
-    /* Allows mouse events to pass through to the canvas below */
-    pointer-events: none;
+
+.glass-nav.hidden { opacity: 0; pointer-events: none; transform: translateY(-10px); }
+
+.nav-content {
+    width: 90%;
+    display: flex; justify-content: space-between; align-items: center;
+    color: white; font-weight: 500;
 }
-/* Style for the "Best: XX%" text at the bottom */
-.best-score {
-    position: absolute;
-    bottom: 20px;
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.5);
-    z-index: 10;
-    pointer-events: none;
+
+.nav-share-btn {
+    background: white; color: black;
+    border: none; padding: 8px 20px;
+    border-radius: 20px; font-weight: bold;
+    cursor: pointer; display: none; /* Hidden until success */
 }
-/* Style for the contextual message box */
-.message {
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2rem;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px 20px;
-    border-radius: 8px;
-    z-index: 20;
-    pointer-events: none;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease;
+.nav-share-btn.active { display: block; }
+
+/* 2. Intro State */
+.overlay-container { position: absolute; z-index: 150; text-align: center; color: white; }
+.hero-text { font-size: 2.8rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; }
+.start-btn { background: white; color: black; border: none; padding: 15px 50px; border-radius: 35px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+
+/* 3. Score & Center Dot Circle */
+.score { position: absolute; display: flex; align-items: baseline; font-size: 6rem; font-weight: 900; z-index: 10; pointer-events: none; transition: color 0.3s; }
+.score.hidden { display: none; }
+#scoreDec, .percent { font-size: 2.5rem; opacity: 0.8; }
+
+.dot {
+    display: inline-block;
+    width: 14px; height: 14px; /* Perfectly round center dot */
+    background-color: #fff;
+    border-radius: 50%;
+    margin: 0 15px;
+    transform: translateY(-10px);
+    box-shadow: 0 0 15px #fff, 0 0 5px cyan;
 }
-/* Blinking animation for warnings */
-@keyframes blink {
-    50% { opacity: 0.5; }
-}
-.message.blinking {
-    animation: blink 1.5s infinite;
-}
-/* Style for the "New High Score" notification */
-.new-high-score {
-    position: absolute;
-    bottom: 60px;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #fff;
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); /* Pop-in effect */
-}
-.new-high-score.active {
-    opacity: 1;
-    transform: scale(1);
-    animation: glow 1s 2 alternate; /* Play the glow twice */
-}
-/* Glowing animation for the high score text */
-@keyframes glow {
-    from {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #eee;
-    }
-    to {
-        text-shadow: 0 0 10px #fff, 0 0 20px #eee, 0 0 30px #ddd;
-    }
-}
-/* Style for the Share button */
-.share-button {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 30;
-    padding: 12px 24px;
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
-}
-.share-button.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+
+.message { position: absolute; top: 30%; color: #ff4757; opacity: 0; z-index: 120; font-weight: bold; font-size: 1.5rem; text-align: center; width: 100%; }
+.new-high-score { position: absolute; bottom: 15%; color: #ffd700; opacity: 0; z-index: 120; font-size: 2rem; }
+
+@media (max-width: 600px) {
+    .hero-text { font-size: 1.8rem; }
+    .score { font-size: 4rem; }
 }

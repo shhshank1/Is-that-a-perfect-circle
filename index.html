@@ -1,21 +1,34 @@
 <!DOCTYPE html>
- <html lang="en">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Draw a Perfect Circle</title>
-     <link rel="stylesheet" href="style.css">
- </head>
- <body>
-        <!-- The canvas where all drawing happens -->
-        <canvas id="drawCanvas"></canvas>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Perfect Circle Challenge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="drawCanvas"></canvas>
 
-        <!-- Text overlays for scores -->
-        <div id="messageDisplay" class="message"></div>
-        <div id="scoreDisplay" class="score">0%</div>
-        <div id="newHighScoreDisplay" class="new-high-score">New High Score!</div>
-        <div id="bestScoreDisplay" class="best-score">Best: 0%</div>
-        <button id="shareButton" class="share-button">Share Score</button>
-        <script src="script.js"></script>
-    </body>
-    </html> 
+    <nav id="glassNav" class="glass-nav">
+        <div class="nav-content">
+            <span id="bestScoreNav">Best: 0.00%</span>
+            <button id="shareBtnNav" class="nav-share-btn">Share Score</button>
+        </div>
+    </nav>
+
+    <div id="introOverlay" class="overlay-container">
+        <h1 class="hero-text">Can you draw the perfect circle ??</h1>
+        <button id="startBtn" class="start-btn">Start</button>
+    </div>
+
+    <div id="scoreDisplay" class="score hidden">
+        <span id="scoreMain">0</span><span class="dot"></span><span id="scoreDec">00</span><span class="percent">%</span>
+    </div>
+
+    <div id="messageDisplay" class="message"></div>
+    <div id="newHighScoreDisplay" class="new-high-score">New High Score!</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
